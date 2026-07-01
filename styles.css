@@ -1,0 +1,678 @@
+:root {
+  color-scheme: dark;
+  --bg: #080b12;
+  --bg-2: #101724;
+  --panel: rgba(19, 27, 42, 0.82);
+  --panel-strong: rgba(28, 40, 61, 0.96);
+  --text: #f7eddc;
+  --muted: #b8a994;
+  --gold: #e2b66f;
+  --gold-bright: #ffd68a;
+  --blue: #7bd0ff;
+  --moon: #d8e7ff;
+  --red: #ff7d73;
+  --green: #7cf0bd;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --ring: rgba(226, 182, 111, 0.28);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(226, 182, 111, 0.22), transparent 28rem),
+    radial-gradient(circle at 88% 18%, rgba(123, 208, 255, 0.16), transparent 24rem),
+    linear-gradient(135deg, #07080e 0%, #0c1220 46%, #140e13 100%);
+  color: var(--text);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(circle at center, black, transparent 78%);
+}
+
+a {
+  color: inherit;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1rem, 4vw, 4rem);
+  backdrop-filter: blur(18px);
+  background: rgba(8, 11, 18, 0.78);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.brand,
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand {
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  color: #1d1308;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  box-shadow: 0 0 34px rgba(226, 182, 111, 0.33);
+}
+
+.brand-copy {
+  color: var(--text);
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+  color: var(--gold-bright);
+}
+
+.hero {
+  min-height: 100vh;
+}
+
+.hero-grid,
+.panel,
+.footer {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: clamp(1.2rem, 4vw, 4rem);
+  align-items: center;
+  padding: clamp(3rem, 8vw, 7rem) 0 5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.7rem;
+  color: var(--gold-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 1rem;
+  font-size: clamp(3rem, 8vw, 6.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.08em;
+}
+
+h2 {
+  margin-bottom: 0.75rem;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.hero-text,
+.section-heading p,
+.hero-card p,
+.boundary-list,
+.footer {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.hero-actions,
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  align-items: center;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0.75rem 1.15rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.button.primary {
+  color: #1b1105;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  border-color: transparent;
+  box-shadow: 0 14px 44px rgba(226, 182, 111, 0.24);
+}
+
+.button.secondary:hover,
+.button.primary:hover {
+  transform: translateY(-1px);
+}
+
+.hero-card,
+.panel,
+.dial-card,
+.moon-panel,
+.gear-table-wrap,
+.ledger-grid article {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+  box-shadow: 0 24px 70px var(--shadow);
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+  background: var(--panel);
+}
+
+.hero-card::before {
+  content: "";
+  position: absolute;
+  inset: -40% auto auto -20%;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  background: rgba(226, 182, 111, 0.18);
+  filter: blur(8px);
+}
+
+.status-ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 8.5rem;
+  height: 8.5rem;
+  margin-bottom: 1.3rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, rgba(255, 214, 138, 0.18) 0 38%, transparent 39%),
+    conic-gradient(var(--gold-bright), var(--blue), var(--gold), var(--gold-bright));
+  box-shadow: inset 0 0 0 12px rgba(8, 11, 18, 0.8), 0 0 54px rgba(226, 182, 111, 0.18);
+}
+
+.status-ring span {
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.mini-list {
+  position: relative;
+  display: grid;
+  gap: 0.6rem;
+  padding-left: 1.2rem;
+  color: var(--muted);
+}
+
+.panel {
+  margin-bottom: 1rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  background: var(--panel);
+}
+
+.section-heading {
+  max-width: 780px;
+  margin-bottom: 1.35rem;
+}
+
+.controls {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.controls label {
+  display: grid;
+  gap: 0.45rem;
+  min-width: min(100%, 260px);
+  color: var(--muted);
+  font-weight: 800;
+}
+
+input[type="date"],
+input[type="range"] {
+  accent-color: var(--gold);
+}
+
+input[type="date"] {
+  min-height: 2.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 0 0.8rem;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mechanism-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+  gap: 1rem;
+}
+
+.dial-card {
+  padding: 1rem;
+  background: var(--panel-strong);
+}
+
+.card-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.confidence {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 900;
+}
+
+.confidence.preserved {
+  color: #10261c;
+  background: var(--green);
+}
+
+.confidence.inferred {
+  color: #1a1308;
+  background: var(--gold-bright);
+}
+
+.dial-wrap,
+.back-dials {
+  display: grid;
+  place-items: center;
+}
+
+#frontDial,
+.spiral-dial svg {
+  width: min(100%, 520px);
+  height: auto;
+}
+
+.dial-outer {
+  fill: rgba(226, 182, 111, 0.07);
+  stroke: rgba(255, 214, 138, 0.5);
+  stroke-width: 2;
+}
+
+.dial-inner {
+  fill: rgba(8, 11, 18, 0.38);
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+}
+
+.tick.major {
+  stroke: rgba(255, 214, 138, 0.78);
+  stroke-width: 2.5;
+}
+
+.tick.minor {
+  stroke: rgba(255, 255, 255, 0.26);
+  stroke-width: 1;
+}
+
+.zodiac-label,
+.dial-caption {
+  fill: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pointer line {
+  stroke-linecap: round;
+  stroke-width: 6;
+}
+
+.sun-pointer line,
+.sun-pointer circle {
+  stroke: var(--gold-bright);
+  fill: var(--gold-bright);
+  filter: url(#softGlow);
+}
+
+.moon-pointer line,
+.moon-pointer circle {
+  stroke: var(--moon);
+  fill: var(--moon);
+}
+
+.dial-hub {
+  fill: url(#brass);
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 2;
+}
+
+.readout-grid,
+.receipt-strip,
+.ledger-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.readout-grid {
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 0.8rem;
+}
+
+.readout-grid div,
+.receipt-strip div {
+  padding: 0.85rem;
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.readout-grid span,
+.receipt-strip span,
+.spiral-dial span {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.readout-grid strong,
+.receipt-strip strong,
+.spiral-dial strong {
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.back-dials {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.spiral-dial {
+  width: 100%;
+  text-align: center;
+}
+
+.spiral-path {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 3;
+}
+
+.marker {
+  filter: drop-shadow(0 0 9px rgba(255, 214, 138, 0.7));
+}
+
+.marker.metonic {
+  fill: var(--gold-bright);
+}
+
+.marker.saros {
+  fill: var(--red);
+}
+
+.moon-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.85fr);
+  gap: 1rem;
+  align-items: center;
+}
+
+.moon-visual {
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.moon-ball {
+  flex: 0 0 auto;
+  width: clamp(7.5rem, 18vw, 13rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #d8e7ff;
+  box-shadow: inset -34px 0 44px rgba(0, 0, 0, 0.58), 0 0 44px rgba(216, 231, 255, 0.18);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.receipt-strip {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.gear-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 1fr) minmax(320px, 0.9fr);
+  gap: 1rem;
+}
+
+.gear-stage {
+  position: relative;
+  min-height: 430px;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(226, 182, 111, 0.12), transparent 45%),
+    rgba(0, 0, 0, 0.22);
+}
+
+.gear {
+  --size: 8rem;
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: 10px dashed rgba(255, 214, 138, 0.72);
+  background: radial-gradient(circle, rgba(255, 214, 138, 0.2) 0 20%, rgba(226, 182, 111, 0.08) 21% 58%, rgba(255, 255, 255, 0.08) 59% 100%);
+  box-shadow: inset 0 0 0 10px rgba(0, 0, 0, 0.2), 0 0 30px rgba(226, 182, 111, 0.12);
+  transform: translate(-50%, -50%) rotate(var(--rotation, 0deg));
+}
+
+.gear span {
+  width: 62%;
+  text-align: center;
+  color: var(--text);
+  font-size: 0.78rem;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.gear.large {
+  --size: 12rem;
+  left: 37%;
+  top: 51%;
+}
+
+.gear.medium {
+  --size: 9.25rem;
+  left: 64%;
+  top: 39%;
+}
+
+.gear.medium.moon {
+  left: 64%;
+  top: 66%;
+  border-color: rgba(216, 231, 255, 0.72);
+}
+
+.gear.small {
+  --size: 7rem;
+  left: 30%;
+  top: 26%;
+}
+
+.gear.small.metonic {
+  left: 28%;
+  top: 78%;
+}
+
+.gear.small.saros {
+  border-color: rgba(255, 125, 115, 0.75);
+}
+
+.gear-table-wrap {
+  padding: 1rem;
+  background: var(--panel-strong);
+  overflow: auto;
+}
+
+.gear-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.gear-table th,
+.gear-table td {
+  padding: 0.85rem 0.55rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  text-align: left;
+  vertical-align: top;
+}
+
+.gear-table th {
+  color: var(--gold-bright);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gear-table td {
+  color: var(--muted);
+}
+
+.ledger-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+}
+
+.ledger-grid article {
+  padding: 1rem;
+  background: var(--panel-strong);
+}
+
+.receipt-output {
+  min-height: 280px;
+  overflow: auto;
+  margin: 0;
+  padding: 1rem;
+  border-radius: 18px;
+  color: #eaf4ff;
+  background: rgba(0, 0, 0, 0.34);
+  white-space: pre-wrap;
+  line-height: 1.55;
+}
+
+.boundary-list {
+  display: grid;
+  gap: 0.85rem;
+  padding-left: 1.2rem;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.5rem 0 3rem;
+}
+
+.footer a {
+  color: var(--gold-bright);
+  font-weight: 900;
+}
+
+@media (max-width: 900px) {
+  .hero-grid,
+  .mechanism-grid,
+  .moon-panel,
+  .gear-grid,
+  .ledger-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .readout-grid,
+  .receipt-strip,
+  .back-dials {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .moon-visual {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .gear-stage {
+    min-height: 360px;
+  }
+
+  .gear.large {
+    left: 42%;
+  }
+
+  .gear.medium,
+  .gear.medium.moon {
+    left: 70%;
+  }
+}
