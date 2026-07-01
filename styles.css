@@ -12,6 +12,7 @@
   --moon: #d8e7ff;
   --red: #ff7d73;
   --green: #7cf0bd;
+  --purple: #c7a6ff;
   --shadow: rgba(0, 0, 0, 0.45);
   --ring: rgba(226, 182, 111, 0.28);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -162,7 +163,10 @@ h3 {
 .section-heading p,
 .hero-card p,
 .boundary-list,
-.footer {
+.footer,
+.source-toolbar p,
+.confidence-card p,
+.source-card p {
   color: var(--muted);
   line-height: 1.7;
 }
@@ -207,7 +211,9 @@ h3 {
 .dial-card,
 .moon-panel,
 .gear-table-wrap,
-.ledger-grid article {
+.ledger-grid article,
+.confidence-card,
+.source-card {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 28px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
@@ -338,6 +344,16 @@ input[type="date"] {
 .confidence.inferred {
   color: #1a1308;
   background: var(--gold-bright);
+}
+
+.confidence.approximate {
+  color: #061b29;
+  background: var(--blue);
+}
+
+.confidence.future {
+  color: #150b25;
+  background: var(--purple);
 }
 
 .dial-wrap,
@@ -598,6 +614,132 @@ input[type="date"] {
   color: var(--muted);
 }
 
+.confidence-panel {
+  position: relative;
+  overflow: hidden;
+}
+
+.confidence-panel::before {
+  content: "";
+  position: absolute;
+  inset: auto -6rem -8rem auto;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  background: rgba(123, 208, 255, 0.11);
+  filter: blur(12px);
+}
+
+.confidence-matrix,
+.source-card-grid {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+}
+
+.confidence-matrix {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 1.4rem;
+}
+
+.confidence-card,
+.source-card {
+  padding: 1rem;
+  background: var(--panel-strong);
+}
+
+.confidence-card {
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.confidence-card h3,
+.source-card h3,
+.source-toolbar h3 {
+  margin-bottom: 0.25rem;
+}
+
+.preserved-card {
+  border-color: rgba(124, 240, 189, 0.34);
+}
+
+.inferred-card {
+  border-color: rgba(255, 214, 138, 0.34);
+}
+
+.approximate-card {
+  border-color: rgba(123, 208, 255, 0.34);
+}
+
+.future-card {
+  border-color: rgba(199, 166, 255, 0.34);
+}
+
+.source-toolbar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 22px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.source-toolbar p {
+  max-width: 680px;
+  margin-bottom: 0;
+}
+
+.source-card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.source-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.source-card footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.source-card a {
+  color: var(--gold-bright);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.source-card a:hover {
+  text-decoration: underline;
+}
+
+.source-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.source-chip {
+  display: inline-flex;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0.28rem 0.55rem;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
 .ledger-grid {
   grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
 }
@@ -639,6 +781,13 @@ input[type="date"] {
   font-weight: 900;
 }
 
+@media (max-width: 1050px) {
+  .confidence-matrix,
+  .source-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 900px) {
   .hero-grid,
   .mechanism-grid,
@@ -650,7 +799,9 @@ input[type="date"] {
 
   .readout-grid,
   .receipt-strip,
-  .back-dials {
+  .back-dials,
+  .confidence-matrix,
+  .source-card-grid {
     grid-template-columns: 1fr;
   }
 
@@ -659,6 +810,11 @@ input[type="date"] {
   }
 
   .moon-visual {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .source-toolbar {
     align-items: flex-start;
     flex-direction: column;
   }
