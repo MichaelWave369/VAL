@@ -7,7 +7,7 @@ It does not claim to be the preserved ancient machine in complete form. Instead,
 - **Preserved / historically grounded**: major known cycle ideas such as Metonic and Saros-style calendar logic.
 - **Inferred / reconstructed**: gear-train relationships and dial interpretations based on modern scholarship.
 - **Educational approximation**: simplified astronomical calculations used so the simulation can run in the browser.
-- **Speculative / future lane**: planet layers and advanced reconstructions not included in v0.
+- **Speculative / future lane**: planet layers and advanced reconstructions not included in the default v0.2 mechanism.
 
 ## Live site
 
@@ -15,7 +15,7 @@ Once GitHub Pages finishes deploying, the site should be available at:
 
 https://michaelwave369.github.io/VAL/
 
-## What v0 includes
+## What v0.2 includes
 
 - Date/crank input
 - Sun pointer and zodiac/calendar dial
@@ -26,6 +26,8 @@ https://michaelwave369.github.io/VAL/
 - Educational eclipse-window check
 - Gear x-ray visualization
 - Claim ledger / receipt panel
+- Source / confidence ledger
+- Reference cards for grounded, inferred, approximate, and future lanes
 
 ## Local use
 
@@ -45,13 +47,22 @@ http://localhost:8080
 
 VAL is an interpretive educational model. It uses modern cycle approximations to make the ancient idea playable and inspectable. It should not be used as a precision astronomy tool, a complete scholarly reconstruction, or a claim that all missing Antikythera components are known with certainty.
 
+## v0.2 confidence lanes
+
+| Lane | Use |
+| --- | --- |
+| Grounded | Cycle-level history, including Metonic and Saros framing. |
+| Inferred | Reconstructed layouts, missing components, and gear relationships. |
+| Approx | Browser math, SVG spirals, CSS gears, and simplified eclipse-window checks. |
+| Future | Planet pointers, alternate cosmos models, and per-source reconstruction toggles. |
+
 ## Project direction
 
 Future versions can add:
 
 - Full 3D gear view
 - Configurable reconstruction models
-- Source-cited scholarship cards
+- Source-cited scholarship cards with page/section notes
 - Planetary pointer layer marked by confidence level
 - Import/export simulation receipts
 - Test fixtures comparing model output against known dates
