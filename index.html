@@ -19,6 +19,7 @@
         </a>
         <div class="nav-links">
           <a href="#mechanism">Mechanism</a>
+          <a href="#lab">Model Lab</a>
           <a href="#sources">Sources</a>
           <a href="#ledger">Ledger</a>
           <a href="#model">Model</a>
@@ -36,24 +37,25 @@
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#mechanism">Open the mechanism</a>
-            <a class="button secondary" href="#sources">Check confidence</a>
+            <a class="button secondary" href="#lab">Choose model lane</a>
           </div>
         </div>
 
         <div class="hero-card" aria-label="VAL status card">
           <div class="status-ring">
-            <span>v0.2</span>
+            <span>v0.3</span>
           </div>
           <h2>Claim-safe build</h2>
           <p>
             This is not a precision astronomy tool or a final scholarly reconstruction.
-            It is a transparent simulation scaffold for learning, testing, and extending.
+            It is a transparent simulation scaffold for learning, testing, exporting, and extending.
           </p>
           <ul class="mini-list">
             <li><strong>Preserved:</strong> major cycle concepts</li>
             <li><strong>Inferred:</strong> dial/gear relationships</li>
             <li><strong>Approx:</strong> browser astronomy math</li>
-            <li><strong>Future:</strong> planet layer and alternate reconstructions</li>
+            <li><strong>Model Lab:</strong> selectable reconstruction lanes</li>
+            <li><strong>License:</strong> MIT open-source release</li>
           </ul>
         </div>
       </section>
@@ -77,6 +79,14 @@
           <label>
             Crank offset: <span id="crankLabel">0</span> lunar months
             <input id="crankInput" type="range" min="-235" max="235" value="0" />
+          </label>
+          <label>
+            Model lane
+            <select id="modelSelect" aria-label="Choose reconstruction confidence lane">
+              <option value="conservative">Conservative teaching model</option>
+              <option value="cycle">Cycle-forward reconstruction</option>
+              <option value="cosmos-preview">Cosmos preview / locked lane</option>
+            </select>
           </label>
           <button id="todayButton" class="button secondary" type="button">Return to today</button>
         </div>
@@ -208,12 +218,46 @@
         </div>
       </section>
 
+      <section id="lab" class="panel model-lab-panel" aria-label="Model lane laboratory">
+        <div class="section-heading">
+          <p class="eyebrow">v0.3 Model Lab</p>
+          <h2>Choose the reconstruction lane before reading the output</h2>
+          <p>
+            VAL now separates the playable mechanism from the interpretation lane. The math stays transparent;
+            the receipt records which confidence mode was active when the snapshot was produced.
+          </p>
+        </div>
+
+        <div class="model-lab-grid">
+          <article class="model-mode-card">
+            <span id="modelModeStatus" class="confidence preserved">grounded</span>
+            <h3 id="modelModeName">—</h3>
+            <p id="modelModeUse">—</p>
+            <p><strong>Denied claim:</strong> <span id="modelModeDenied">—</span></p>
+          </article>
+
+          <article class="model-mode-card">
+            <h3>Active outputs</h3>
+            <ul id="modelModeOutputList" class="boundary-list"></ul>
+          </article>
+
+          <article class="model-mode-card license-card">
+            <span class="confidence future">MIT</span>
+            <h3>Open-source license</h3>
+            <p>
+              VAL is released under the MIT License so people can learn from it, remix it, fork it, and build new educational tools.
+            </p>
+            <a href="LICENSE">Read license</a>
+          </article>
+        </div>
+      </section>
+
       <section id="sources" class="panel confidence-panel" aria-label="Source and confidence panel">
         <div class="section-heading">
           <p class="eyebrow">Source / confidence ledger</p>
           <h2>Every layer gets a label before it gets a claim</h2>
           <p>
-            VAL v0.2 adds source cards and confidence bands so users can tell the difference between a grounded historical cycle,
+            VAL v0.3 keeps source cards and confidence bands so users can tell the difference between a grounded historical cycle,
             a reconstructed interpretation, a teaching approximation, and a future lane.
           </p>
         </div>
@@ -243,7 +287,7 @@
 
         <div class="source-toolbar">
           <h3>Reference cards</h3>
-          <p>These are starting receipts for the v0.2 educational boundary. Future versions can add page-level notes and model toggles.</p>
+          <p>These are starting receipts for the v0.3 educational boundary. Future versions can add page-level notes and model toggles.</p>
         </div>
         <div id="sourceCards" class="source-card-grid" aria-live="polite"></div>
       </section>
@@ -259,16 +303,23 @@
 
         <div class="ledger-grid">
           <article>
-            <h3>Current receipt</h3>
+            <div class="card-heading receipt-heading">
+              <h3>Current receipt</h3>
+              <div class="receipt-actions">
+                <button id="copyReceiptButton" class="button secondary" type="button">Copy JSON</button>
+                <button id="downloadReceiptButton" class="button secondary" type="button">Download JSON</button>
+              </div>
+            </div>
+            <p id="receiptActionStatus" class="action-status" aria-live="polite"></p>
             <pre id="receiptOutput" class="receipt-output">Awaiting input…</pre>
           </article>
           <article>
             <h3>Boundary notes</h3>
             <ul class="boundary-list">
-              <li><strong>Pass:</strong> cycle visualization, date-to-dial mapping, educational gear ratios, and source/confidence labeling.</li>
+              <li><strong>Pass:</strong> cycle visualization, date-to-dial mapping, educational gear ratios, source/confidence labeling, model lanes, and exportable receipts.</li>
               <li><strong>Bounded:</strong> exact tooth counts, full ancient layout, and missing component certainty.</li>
               <li><strong>Denied:</strong> precision astronomy claims, prophecy claims, or “complete reconstruction” claims.</li>
-              <li><strong>Next receipt:</strong> add reconstruction toggles, source annotations, and exportable ledger snapshots.</li>
+              <li><strong>Next receipt:</strong> add page-level source annotations and optional 3D gear view.</li>
             </ul>
           </article>
         </div>
@@ -277,9 +328,12 @@
 
     <footer class="footer">
       <p>
-        VAL · Virtual Antikythera Ledger · Built as a transparent educational simulation.
+        VAL · Virtual Antikythera Ledger · Built as a transparent educational simulation · MIT License.
       </p>
-      <a href="https://github.com/MichaelWave369/VAL">GitHub repo</a>
+      <div class="footer-links">
+        <a href="https://github.com/MichaelWave369/VAL">GitHub repo</a>
+        <a href="LICENSE">MIT License</a>
+      </div>
     </footer>
 
     <script src="app.js"></script>
