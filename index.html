@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="VAL is a virtual Antikythera mechanism: an educational, claim-safe browser simulation with astronomical cycle receipts."
+    />
+    <title>VAL — Virtual Antikythera Ledger</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <nav class="topbar" aria-label="Project navigation">
+        <a class="brand" href="#top" aria-label="VAL home">
+          <span class="brand-mark">VAL</span>
+          <span class="brand-copy">Virtual Antikythera Ledger</span>
+        </a>
+        <div class="nav-links">
+          <a href="#mechanism">Mechanism</a>
+          <a href="#ledger">Ledger</a>
+          <a href="#model">Model</a>
+        </div>
+      </nav>
+
+      <section id="top" class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Ancient sky computer · modern receipt layer</p>
+          <h1>Turn the crank. Watch the sky ledger move.</h1>
+          <p class="hero-text">
+            VAL is a browser-based virtual Antikythera mechanism. It maps date input into
+            Sun, Moon, lunar phase, Metonic, Saros, and Exeligmos cycle positions while
+            clearly separating preserved history, reconstruction, and educational approximation.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="#mechanism">Open the mechanism</a>
+            <a class="button secondary" href="#ledger">Read the receipt</a>
+          </div>
+        </div>
+
+        <div class="hero-card" aria-label="VAL status card">
+          <div class="status-ring">
+            <span>v0.1</span>
+          </div>
+          <h2>Claim-safe build</h2>
+          <p>
+            This is not a precision astronomy tool or a final scholarly reconstruction.
+            It is a transparent simulation scaffold for learning, testing, and extending.
+          </p>
+          <ul class="mini-list">
+            <li><strong>Preserved:</strong> major cycle concepts</li>
+            <li><strong>Inferred:</strong> dial/gear relationships</li>
+            <li><strong>Approx:</strong> browser astronomy math</li>
+          </ul>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <section id="mechanism" class="panel mechanism-panel">
+        <div class="section-heading">
+          <p class="eyebrow">Interactive mechanism</p>
+          <h2>Set a date or crank the machine</h2>
+          <p>
+            The model uses simplified astronomical cycles so every movement can generate a visible receipt.
+          </p>
+        </div>
+
+        <div class="controls" aria-label="Mechanism controls">
+          <label>
+            Date input
+            <input id="dateInput" type="date" />
+          </label>
+          <label>
+            Crank offset: <span id="crankLabel">0</span> lunar months
+            <input id="crankInput" type="range" min="-235" max="235" value="0" />
+          </label>
+          <button id="todayButton" class="button secondary" type="button">Return to today</button>
+        </div>
+
+        <div class="mechanism-grid">
+          <article class="dial-card">
+            <div class="card-heading">
+              <h3>Front dial</h3>
+              <span class="confidence preserved">grounded</span>
+            </div>
+            <div class="dial-wrap">
+              <svg id="frontDial" viewBox="0 0 500 500" role="img" aria-label="Front dial showing Sun and Moon pointers">
+                <defs>
+                  <radialGradient id="brass" cx="50%" cy="45%" r="60%">
+                    <stop offset="0%" stop-color="#ffe9b0" />
+                    <stop offset="60%" stop-color="#bd8644" />
+                    <stop offset="100%" stop-color="#4a2a16" />
+                  </radialGradient>
+                  <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+                <circle cx="250" cy="250" r="220" class="dial-outer" />
+                <circle cx="250" cy="250" r="186" class="dial-inner" />
+                <g id="zodiacTicks"></g>
+                <g id="zodiacLabels"></g>
+                <g id="sunPointer" class="pointer sun-pointer">
+                  <line x1="250" y1="250" x2="250" y2="72" />
+                  <circle cx="250" cy="66" r="13" />
+                </g>
+                <g id="moonPointer" class="pointer moon-pointer">
+                  <line x1="250" y1="250" x2="250" y2="104" />
+                  <circle cx="250" cy="98" r="10" />
+                </g>
+                <circle cx="250" cy="250" r="18" class="dial-hub" />
+                <text x="250" y="467" text-anchor="middle" class="dial-caption">Zodiac / Calendar</text>
+              </svg>
+            </div>
+            <div class="readout-grid">
+              <div><span>Sun longitude</span><strong id="sunReadout">—</strong></div>
+              <div><span>Moon longitude</span><strong id="moonReadout">—</strong></div>
+              <div><span>Moon phase</span><strong id="phaseReadout">—</strong></div>
+            </div>
+          </article>
+
+          <article class="dial-card">
+            <div class="card-heading">
+              <h3>Back dials</h3>
+              <span class="confidence inferred">inferred</span>
+            </div>
+            <div class="back-dials">
+              <div class="spiral-dial">
+                <svg id="metonicDial" viewBox="0 0 320 320" role="img" aria-label="Metonic spiral dial">
+                  <circle cx="160" cy="160" r="145" class="dial-outer" />
+                  <path id="metonicSpiral" class="spiral-path" d="" />
+                  <circle id="metonicMarker" r="7" class="marker metonic" />
+                  <text x="160" y="300" text-anchor="middle" class="dial-caption">Metonic · 235 months</text>
+                </svg>
+                <strong id="metonicReadout">—</strong>
+                <span>19-year lunar calendar cycle</span>
+              </div>
+
+              <div class="spiral-dial">
+                <svg id="sarosDial" viewBox="0 0 320 320" role="img" aria-label="Saros spiral dial">
+                  <circle cx="160" cy="160" r="145" class="dial-outer" />
+                  <path id="sarosSpiral" class="spiral-path" d="" />
+                  <circle id="sarosMarker" r="7" class="marker saros" />
+                  <text x="160" y="300" text-anchor="middle" class="dial-caption">Saros · 223 months</text>
+                </svg>
+                <strong id="sarosReadout">—</strong>
+                <span>Eclipse-cycle position, not guaranteed event</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel moon-panel" aria-label="Moon phase and eclipse window">
+        <div class="moon-visual">
+          <div id="moonPhaseBall" class="moon-ball" aria-hidden="true"></div>
+          <div>
+            <p class="eyebrow">Lunar receipt</p>
+            <h2 id="phaseName">—</h2>
+            <p id="eclipseWindow">—</p>
+          </div>
+        </div>
+        <div class="receipt-strip">
+          <div><span>Synodic age</span><strong id="moonAge">—</strong></div>
+          <div><span>Exeligmos</span><strong id="exeligmosReadout">—</strong></div>
+          <div><span>Draconic node phase</span><strong id="nodeReadout">—</strong></div>
+        </div>
+      </section>
+
+      <section class="panel gear-panel" aria-label="Gear x-ray visualization">
+        <div class="section-heading">
+          <p class="eyebrow">Gear x-ray</p>
+          <h2>Visible ratios, honest labels</h2>
+          <p>
+            The gears below are a teaching scaffold: they show how ratio chains can drive different outputs.
+            They are labeled by confidence rather than presented as a final preserved layout.
+          </p>
+        </div>
+
+        <div class="gear-grid" id="model">
+          <div class="gear-stage" id="gearStage" aria-label="Animated educational gear train">
+            <div class="gear large" data-gear="drive"><span>Drive<br />1:1</span></div>
+            <div class="gear medium" data-gear="sun"><span>Sun<br />365d</span></div>
+            <div class="gear medium moon" data-gear="moon"><span>Moon<br />27.3d</span></div>
+            <div class="gear small saros" data-gear="saros"><span>Saros<br />223m</span></div>
+            <div class="gear small metonic" data-gear="metonic"><span>Metonic<br />235m</span></div>
+          </div>
+
+          <div class="gear-table-wrap">
+            <table class="gear-table">
+              <thead>
+                <tr>
+                  <th>Output</th>
+                  <th>Cycle</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="gearRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="ledger" class="panel ledger-panel">
+        <div class="section-heading">
+          <p class="eyebrow">Simulation receipt</p>
+          <h2>What passed, what is approximate, what stays bounded</h2>
+          <p>
+            Every output below comes from the current date plus crank offset. The confidence labels are part of the artifact, not decoration.
+          </p>
+        </div>
+
+        <div class="ledger-grid">
+          <article>
+            <h3>Current receipt</h3>
+            <pre id="receiptOutput" class="receipt-output">Awaiting input…</pre>
+          </article>
+          <article>
+            <h3>Boundary notes</h3>
+            <ul class="boundary-list">
+              <li><strong>Pass:</strong> cycle visualization, date-to-dial mapping, educational gear ratios.</li>
+              <li><strong>Bounded:</strong> exact tooth counts, full ancient layout, and missing component certainty.</li>
+              <li><strong>Denied:</strong> precision astronomy claims, prophecy claims, or “complete reconstruction” claims.</li>
+              <li><strong>Next receipt:</strong> add source cards and per-reconstruction model toggles.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>
+        VAL · Virtual Antikythera Ledger · Built as a transparent educational simulation.
+      </p>
+      <a href="https://github.com/MichaelWave369/VAL">GitHub repo</a>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
