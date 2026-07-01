@@ -12,6 +12,59 @@ const CYCLES = {
 const NEW_MOON_EPOCH = Date.UTC(2000, 0, 6, 18, 14, 0);
 const zodiacNames = ["AR", "TA", "GE", "CN", "LE", "VI", "LI", "SC", "SA", "CP", "AQ", "PI"];
 
+let latestReceipt = null;
+
+const modelModes = {
+  conservative: {
+    id: "conservative",
+    name: "Conservative teaching model",
+    confidence: "preserved",
+    label: "grounded",
+    use:
+      "Shows the strongest educational layer: date input, Sun/Moon pointers, Moon phase, Metonic, Saros, Exeligmos, and explicit approximation boundaries.",
+    denied: "Does not claim exact preserved gear layout, complete reconstruction, or precision astronomy.",
+    outputs: [
+      "Sun pointer approximation",
+      "Moon pointer approximation",
+      "Moon phase display",
+      "Metonic cycle position",
+      "Saros cycle position",
+      "Exportable JSON receipt",
+    ],
+  },
+  cycle: {
+    id: "cycle",
+    name: "Cycle-forward reconstruction",
+    confidence: "inferred",
+    label: "inferred",
+    use:
+      "Emphasizes how known cycle ideas can be interpreted as dial behavior while keeping the visible gear train as a labeled teaching scaffold.",
+    denied: "Does not claim the SVG spirals or CSS gears are the final ancient mechanical arrangement.",
+    outputs: [
+      "All conservative outputs",
+      "Back-dial interpretation emphasis",
+      "Gear-ratio teaching table",
+      "Source confidence receipts",
+      "Model lane recorded in JSON",
+    ],
+  },
+  "cosmos-preview": {
+    id: "cosmos-preview",
+    name: "Cosmos preview / locked lane",
+    confidence: "future",
+    label: "future",
+    use:
+      "Documents the future planet/cosmos direction without activating planet pointers or presenting disputed reconstructions as fact.",
+    denied: "Does not display planet outputs yet and does not claim planetary reconstruction certainty.",
+    outputs: [
+      "All conservative outputs",
+      "Future planet lane marker",
+      "Cosmos-model receipt boundary",
+      "Explicit locked-lane status",
+    ],
+  },
+};
+
 const gearModel = [
   {
     output: "Drive crank",
@@ -46,7 +99,7 @@ const gearModel = [
   {
     output: "Exeligmos remainder",
     cycle: "3 Saros cycles · tracks one-third-day offset compensation",
-    status: "Cycle receipt only in v0.2",
+    status: "Cycle receipt only in v0.3",
   },
 ];
 
@@ -89,15 +142,27 @@ const sourceCards = [
   },
   {
     title: "VAL educational model boundary",
-    meta: "Internal ledger · v0.2",
+    meta: "Internal ledger · v0.3",
     confidence: "approximate",
     label: "approx",
     summary:
-      "The browser math uses simplified cycles so the app can be transparent, playable, and easy to inspect.",
+      "The browser math uses simplified cycles so the app can be transparent, playable, exportable, and easy to inspect.",
     use:
       "VAL receipts deny precision astronomy claims and treat eclipse windows as learning flags requiring outside verification.",
     tags: ["browser math", "receipt", "claim boundary"],
     url: "#ledger",
+  },
+  {
+    title: "MIT License",
+    meta: "Open-source release · v0.3",
+    confidence: "future",
+    label: "MIT",
+    summary:
+      "VAL is licensed so builders can fork, remix, teach, and extend the project while preserving the license notice.",
+    use:
+      "The license is for code reuse. It does not change the scholarly confidence boundaries of the mechanism model.",
+    tags: ["open source", "forkable", "builder friendly"],
+    url: "LICENSE",
   },
 ];
 
@@ -105,6 +170,7 @@ const els = {
   dateInput: document.getElementById("dateInput"),
   crankInput: document.getElementById("crankInput"),
   crankLabel: document.getElementById("crankLabel"),
+  modelSelect: document.getElementById("modelSelect"),
   todayButton: document.getElementById("todayButton"),
   zodiacTicks: document.getElementById("zodiacTicks"),
   zodiacLabels: document.getElementById("zodiacLabels"),
@@ -125,7 +191,15 @@ const els = {
   moonAge: document.getElementById("moonAge"),
   exeligmosReadout: document.getElementById("exeligmosReadout"),
   nodeReadout: document.getElementById("nodeReadout"),
+  modelModeStatus: document.getElementById("modelModeStatus"),
+  modelModeName: document.getElementById("modelModeName"),
+  modelModeUse: document.getElementById("modelModeUse"),
+  modelModeDenied: document.getElementById("modelModeDenied"),
+  modelModeOutputList: document.getElementById("modelModeOutputList"),
   receiptOutput: document.getElementById("receiptOutput"),
+  copyReceiptButton: document.getElementById("copyReceiptButton"),
+  downloadReceiptButton: document.getElementById("downloadReceiptButton"),
+  receiptActionStatus: document.getElementById("receiptActionStatus"),
   gearRows: document.getElementById("gearRows"),
   sourceCards: document.getElementById("sourceCards"),
   gears: Array.from(document.querySelectorAll(".gear")),
@@ -169,6 +243,11 @@ function toDateInputValue(date = new Date()) {
 function parseInputDate(value) {
   const [year, month, day] = value.split("-").map(Number);
   return Date.UTC(year, month - 1, day, 12, 0, 0);
+}
+
+function getSelectedModelMode() {
+  const key = els.modelSelect?.value ?? "conservative";
+  return modelModes[key] ?? modelModes.conservative;
 }
 
 function drawZodiac() {
@@ -290,15 +369,15 @@ function getModelState() {
   const nearFull = Math.abs(phase - 0.5) < 0.035;
   const nearNode = nodeDistance < 13.5;
 
-  let eclipseMessage = "No v0.2 eclipse window flag. Saros position is still shown as cycle context.";
+  let eclipseMessage = "No v0.3 eclipse window flag. Saros position is still shown as cycle context.";
   if (nearNew && nearNode) {
     eclipseMessage = "Possible solar eclipse window by simplified phase + node check. Requires modern verification.";
   } else if (nearFull && nearNode) {
     eclipseMessage = "Possible lunar eclipse window by simplified phase + node check. Requires modern verification.";
   } else if (nearNew || nearFull) {
-    eclipseMessage = "Strong lunar phase alignment, but node check does not pass the v0.2 eclipse-window gate.";
+    eclipseMessage = "Strong lunar phase alignment, but node check does not pass the v0.3 eclipse-window gate.";
   } else if (nearNode) {
-    eclipseMessage = "Near nodal alignment, but Moon phase is not close enough for the v0.2 eclipse-window gate.";
+    eclipseMessage = "Near nodal alignment, but Moon phase is not close enough for the v0.3 eclipse-window gate.";
   }
 
   return {
@@ -371,15 +450,36 @@ function updateReadouts(state) {
   updateMoonBall(state.phase);
 }
 
-function updateReceipt(state) {
+function updateModelLab(mode) {
+  if (!els.modelModeName) return;
+
+  els.modelModeStatus.className = `confidence ${mode.confidence}`;
+  els.modelModeStatus.textContent = mode.label;
+  els.modelModeName.textContent = mode.name;
+  els.modelModeUse.textContent = mode.use;
+  els.modelModeDenied.textContent = mode.denied;
+  els.modelModeOutputList.innerHTML = mode.outputs.map((output) => `<li>${output}</li>`).join("");
+}
+
+function buildReceipt(state, mode) {
   const adjustedDate = new Date(state.adjustedUtc).toISOString().slice(0, 10);
   const inputDate = new Date(state.baseUtc).toISOString().slice(0, 10);
-  const receipt = {
+
+  return {
     project: "VAL — Virtual Antikythera Ledger",
-    version: "0.2 source confidence build",
+    version: "0.3 model-lane export build",
+    generated_at_utc: new Date().toISOString(),
     input_date: inputDate,
     crank_offset_lunar_months: state.crankMonths,
     effective_model_date: adjustedDate,
+    active_model_lane: {
+      id: mode.id,
+      name: mode.name,
+      confidence: mode.label,
+      use: mode.use,
+      denied_claim: mode.denied,
+      active_outputs: mode.outputs,
+    },
     outputs: {
       sun_longitude_approx_deg: Number(round(state.sunLongitude, 3)),
       moon_longitude_approx_deg: Number(round(state.moonLongitude, 3)),
@@ -403,19 +503,29 @@ function updateReceipt(state) {
       use: source.use,
       url: source.url,
     })),
+    license: {
+      name: "MIT License",
+      file: "LICENSE",
+      note: "License applies to VAL project code. It does not alter the historical or scholarly confidence boundaries.",
+    },
     denied_claims: ["complete preserved gear layout", "precision astronomy", "final Antikythera reconstruction", "planetary model certainty"],
   };
+}
 
-  els.receiptOutput.textContent = JSON.stringify(receipt, null, 2);
+function updateReceipt(state, mode) {
+  latestReceipt = buildReceipt(state, mode);
+  els.receiptOutput.textContent = JSON.stringify(latestReceipt, null, 2);
 }
 
 function update() {
   const state = getModelState();
+  const mode = getSelectedModelMode();
   updatePointers(state);
   updateSpiralMarkers(state);
   updateGears(state);
   updateReadouts(state);
-  updateReceipt(state);
+  updateModelLab(mode);
+  updateReceipt(state, mode);
 }
 
 function renderGearRows() {
@@ -450,12 +560,64 @@ function renderSourceCards() {
             ${source.tags.map((tag) => `<span class="source-chip">${tag}</span>`).join("")}
           </div>
           <footer>
-            <a href="${source.url}" ${source.url.startsWith("#") ? "" : 'target="_blank" rel="noopener noreferrer"'}>Open receipt</a>
+            <a href="${source.url}" ${source.url.startsWith("#") || source.url === "LICENSE" ? "" : 'target="_blank" rel="noopener noreferrer"'}>Open receipt</a>
           </footer>
         </article>
       `,
     )
     .join("");
+}
+
+function setActionStatus(message) {
+  if (!els.receiptActionStatus) return;
+  els.receiptActionStatus.textContent = message;
+  window.clearTimeout(setActionStatus.timeoutId);
+  setActionStatus.timeoutId = window.setTimeout(() => {
+    els.receiptActionStatus.textContent = "";
+  }, 3600);
+}
+
+async function copyReceipt() {
+  if (!latestReceipt) return;
+  const text = JSON.stringify(latestReceipt, null, 2);
+
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "absolute";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+    setActionStatus("Receipt JSON copied to clipboard.");
+  } catch (error) {
+    console.error(error);
+    setActionStatus("Copy failed. You can still select the JSON manually.");
+  }
+}
+
+function downloadReceipt() {
+  if (!latestReceipt) return;
+  const text = JSON.stringify(latestReceipt, null, 2);
+  const blob = new Blob([text], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const date = latestReceipt.effective_model_date ?? "snapshot";
+  const mode = latestReceipt.active_model_lane?.id ?? "model";
+  const anchor = document.createElement("a");
+
+  anchor.href = url;
+  anchor.download = `VAL_receipt_${date}_${mode}.json`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+  URL.revokeObjectURL(url);
+  setActionStatus("Receipt JSON download started.");
 }
 
 function init() {
@@ -469,6 +631,9 @@ function init() {
 
   els.dateInput.addEventListener("input", update);
   els.crankInput.addEventListener("input", update);
+  els.modelSelect?.addEventListener("change", update);
+  els.copyReceiptButton?.addEventListener("click", copyReceipt);
+  els.downloadReceiptButton?.addEventListener("click", downloadReceipt);
   els.todayButton.addEventListener("click", () => {
     els.dateInput.value = toDateInputValue();
     els.crankInput.value = "0";
