@@ -46,7 +46,58 @@ const gearModel = [
   {
     output: "Exeligmos remainder",
     cycle: "3 Saros cycles · tracks one-third-day offset compensation",
-    status: "Cycle receipt only in v0",
+    status: "Cycle receipt only in v0.2",
+  },
+];
+
+const sourceCards = [
+  {
+    title: "Decoding the Antikythera Mechanism",
+    meta: "Nature · 2006",
+    confidence: "preserved",
+    label: "grounded",
+    summary:
+      "Foundational modern decoding work for the mechanism's inscriptions, gearing evidence, and astronomical cycle architecture.",
+    use:
+      "VAL uses this as a high-confidence receipt for cycle-level framing, not as permission to claim a complete machine layout.",
+    tags: ["AMRP", "X-ray CT", "cycle evidence"],
+    url: "https://www.nature.com/articles/nature05357",
+  },
+  {
+    title: "Calendars, games, and eclipse prediction",
+    meta: "Nature · 2008",
+    confidence: "preserved",
+    label: "grounded",
+    summary:
+      "Supports the back-dial calendar/eclipses/games context, including Metonic and Saros-style public explanations.",
+    use:
+      "VAL uses this for the back-dial confidence layer while still labeling the SVG spirals as educational visualization.",
+    tags: ["Metonic", "Saros", "Games dial"],
+    url: "https://www.nature.com/articles/nature07130",
+  },
+  {
+    title: "A Model of the Cosmos",
+    meta: "Scientific Reports · 2021",
+    confidence: "inferred",
+    label: "inferred",
+    summary:
+      "A modern reconstruction model for the front display and broader cosmos display, useful but not identical to preserved certainty.",
+    use:
+      "VAL keeps planet pointers and alternate cosmos layouts in the future/speculative lane until model toggles exist.",
+    tags: ["reconstruction", "planet lane", "model toggle"],
+    url: "https://www.nature.com/articles/s41598-021-84310-w",
+  },
+  {
+    title: "VAL educational model boundary",
+    meta: "Internal ledger · v0.2",
+    confidence: "approximate",
+    label: "approx",
+    summary:
+      "The browser math uses simplified cycles so the app can be transparent, playable, and easy to inspect.",
+    use:
+      "VAL receipts deny precision astronomy claims and treat eclipse windows as learning flags requiring outside verification.",
+    tags: ["browser math", "receipt", "claim boundary"],
+    url: "#ledger",
   },
 ];
 
@@ -76,6 +127,7 @@ const els = {
   nodeReadout: document.getElementById("nodeReadout"),
   receiptOutput: document.getElementById("receiptOutput"),
   gearRows: document.getElementById("gearRows"),
+  sourceCards: document.getElementById("sourceCards"),
   gears: Array.from(document.querySelectorAll(".gear")),
 };
 
@@ -238,15 +290,15 @@ function getModelState() {
   const nearFull = Math.abs(phase - 0.5) < 0.035;
   const nearNode = nodeDistance < 13.5;
 
-  let eclipseMessage = "No v0 eclipse window flag. Saros position is still shown as cycle context.";
+  let eclipseMessage = "No v0.2 eclipse window flag. Saros position is still shown as cycle context.";
   if (nearNew && nearNode) {
     eclipseMessage = "Possible solar eclipse window by simplified phase + node check. Requires modern verification.";
   } else if (nearFull && nearNode) {
     eclipseMessage = "Possible lunar eclipse window by simplified phase + node check. Requires modern verification.";
   } else if (nearNew || nearFull) {
-    eclipseMessage = "Strong lunar phase alignment, but node check does not pass the v0 eclipse-window gate.";
+    eclipseMessage = "Strong lunar phase alignment, but node check does not pass the v0.2 eclipse-window gate.";
   } else if (nearNode) {
-    eclipseMessage = "Near nodal alignment, but Moon phase is not close enough for the v0 eclipse-window gate.";
+    eclipseMessage = "Near nodal alignment, but Moon phase is not close enough for the v0.2 eclipse-window gate.";
   }
 
   return {
@@ -324,7 +376,7 @@ function updateReceipt(state) {
   const inputDate = new Date(state.baseUtc).toISOString().slice(0, 10);
   const receipt = {
     project: "VAL — Virtual Antikythera Ledger",
-    version: "0.1 static browser build",
+    version: "0.2 source confidence build",
     input_date: inputDate,
     crank_offset_lunar_months: state.crankMonths,
     effective_model_date: adjustedDate,
@@ -339,11 +391,19 @@ function updateReceipt(state) {
       node_distance_deg: Number(round(state.nodeDistance, 3)),
       eclipse_window_flag: state.nearNode && (state.nearNew || state.nearFull),
     },
-    claim_boundary: {
-      preserved_or_grounded: ["Metonic cycle", "Saros cycle", "lunar phase concept", "hand-cranked analog computation idea"],
-      educational_approximation: ["browser cycle math", "SVG spiral positions", "CSS gear animation", "simplified eclipse-window check"],
-      not_claimed: ["complete preserved gear layout", "precision astronomy", "final Antikythera reconstruction", "planetary model certainty"],
+    confidence_layer: {
+      grounded: ["Metonic cycle", "Saros cycle", "lunar phase concept", "analog computation framing"],
+      inferred: ["dial layout interpretation", "missing component relationships", "reconstruction model references"],
+      approximate: ["browser cycle math", "SVG spiral positions", "CSS gear animation", "simplified eclipse-window check"],
+      future: ["planet pointers", "alternate cosmos models", "per-source reconstruction toggles"],
     },
+    sources: sourceCards.map((source) => ({
+      title: source.title,
+      confidence: source.label,
+      use: source.use,
+      url: source.url,
+    })),
+    denied_claims: ["complete preserved gear layout", "precision astronomy", "final Antikythera reconstruction", "planetary model certainty"],
   };
 
   els.receiptOutput.textContent = JSON.stringify(receipt, null, 2);
@@ -372,12 +432,39 @@ function renderGearRows() {
     .join("");
 }
 
+function renderSourceCards() {
+  if (!els.sourceCards) return;
+
+  els.sourceCards.innerHTML = sourceCards
+    .map(
+      (source) => `
+        <article class="source-card">
+          <span class="confidence ${source.confidence}">${source.label}</span>
+          <div>
+            <h3>${source.title}</h3>
+            <p><strong>${source.meta}</strong></p>
+            <p>${source.summary}</p>
+            <p>${source.use}</p>
+          </div>
+          <div class="source-chip-list">
+            ${source.tags.map((tag) => `<span class="source-chip">${tag}</span>`).join("")}
+          </div>
+          <footer>
+            <a href="${source.url}" ${source.url.startsWith("#") ? "" : 'target="_blank" rel="noopener noreferrer"'}>Open receipt</a>
+          </footer>
+        </article>
+      `,
+    )
+    .join("");
+}
+
 function init() {
   els.dateInput.value = toDateInputValue();
   els.metonicSpiral.setAttribute("d", spiralPath(5, 32, 132));
   els.sarosSpiral.setAttribute("d", spiralPath(4, 34, 132));
   drawZodiac();
   renderGearRows();
+  renderSourceCards();
   update();
 
   els.dateInput.addEventListener("input", update);
