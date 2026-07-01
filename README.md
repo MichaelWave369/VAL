@@ -7,7 +7,7 @@ It does not claim to be the preserved ancient machine in complete form. Instead,
 - **Preserved / historically grounded**: major known cycle ideas such as Metonic and Saros-style calendar logic.
 - **Inferred / reconstructed**: gear-train relationships and dial interpretations based on modern scholarship.
 - **Educational approximation**: simplified astronomical calculations used so the simulation can run in the browser.
-- **Speculative / future lane**: planet layers and advanced reconstructions not included in the default v0.2 mechanism.
+- **Speculative / future lane**: planet layers and advanced reconstructions not included in the default v0.3 mechanism.
 
 ## Live site
 
@@ -15,7 +15,7 @@ Once GitHub Pages finishes deploying, the site should be available at:
 
 https://michaelwave369.github.io/VAL/
 
-## What v0.2 includes
+## What v0.3 includes
 
 - Date/crank input
 - Sun pointer and zodiac/calendar dial
@@ -28,6 +28,10 @@ https://michaelwave369.github.io/VAL/
 - Claim ledger / receipt panel
 - Source / confidence ledger
 - Reference cards for grounded, inferred, approximate, and future lanes
+- Model lane selector
+- Copyable JSON receipts
+- Downloadable JSON receipts
+- MIT License
 
 ## Local use
 
@@ -47,7 +51,15 @@ http://localhost:8080
 
 VAL is an interpretive educational model. It uses modern cycle approximations to make the ancient idea playable and inspectable. It should not be used as a precision astronomy tool, a complete scholarly reconstruction, or a claim that all missing Antikythera components are known with certainty.
 
-## v0.2 confidence lanes
+## v0.3 model lanes
+
+| Lane | Use | Claim boundary |
+| --- | --- | --- |
+| Conservative teaching model | Strongest public layer: Sun/Moon pointers, Moon phase, Metonic, Saros, Exeligmos, and receipts. | No exact preserved gear layout or precision astronomy claim. |
+| Cycle-forward reconstruction | Emphasizes how grounded cycle ideas can be interpreted as dial behavior. | Does not claim the SVG spirals or CSS gears are the final ancient arrangement. |
+| Cosmos preview / locked lane | Documents the future planet/cosmos direction. | Does not activate planet outputs or claim planetary reconstruction certainty. |
+
+## v0.3 confidence lanes
 
 | Lane | Use |
 | --- | --- |
@@ -55,6 +67,10 @@ VAL is an interpretive educational model. It uses modern cycle approximations to
 | Inferred | Reconstructed layouts, missing components, and gear relationships. |
 | Approx | Browser math, SVG spirals, CSS gears, and simplified eclipse-window checks. |
 | Future | Planet pointers, alternate cosmos models, and per-source reconstruction toggles. |
+
+## License
+
+VAL is released under the MIT License. See `LICENSE`.
 
 ## Project direction
 
@@ -64,5 +80,5 @@ Future versions can add:
 - Configurable reconstruction models
 - Source-cited scholarship cards with page/section notes
 - Planetary pointer layer marked by confidence level
-- Import/export simulation receipts
+- Import/export simulation receipt history
 - Test fixtures comparing model output against known dates
