@@ -19,6 +19,7 @@
         </a>
         <div class="nav-links">
           <a href="#mechanism">Mechanism</a>
+          <a href="#sources">Sources</a>
           <a href="#ledger">Ledger</a>
           <a href="#model">Model</a>
         </div>
@@ -35,13 +36,13 @@
           </p>
           <div class="hero-actions">
             <a class="button primary" href="#mechanism">Open the mechanism</a>
-            <a class="button secondary" href="#ledger">Read the receipt</a>
+            <a class="button secondary" href="#sources">Check confidence</a>
           </div>
         </div>
 
         <div class="hero-card" aria-label="VAL status card">
           <div class="status-ring">
-            <span>v0.1</span>
+            <span>v0.2</span>
           </div>
           <h2>Claim-safe build</h2>
           <p>
@@ -52,6 +53,7 @@
             <li><strong>Preserved:</strong> major cycle concepts</li>
             <li><strong>Inferred:</strong> dial/gear relationships</li>
             <li><strong>Approx:</strong> browser astronomy math</li>
+            <li><strong>Future:</strong> planet layer and alternate reconstructions</li>
           </ul>
         </div>
       </section>
@@ -206,6 +208,46 @@
         </div>
       </section>
 
+      <section id="sources" class="panel confidence-panel" aria-label="Source and confidence panel">
+        <div class="section-heading">
+          <p class="eyebrow">Source / confidence ledger</p>
+          <h2>Every layer gets a label before it gets a claim</h2>
+          <p>
+            VAL v0.2 adds source cards and confidence bands so users can tell the difference between a grounded historical cycle,
+            a reconstructed interpretation, a teaching approximation, and a future lane.
+          </p>
+        </div>
+
+        <div class="confidence-matrix">
+          <article class="confidence-card preserved-card">
+            <span class="confidence preserved">grounded</span>
+            <h3>Cycle-level history</h3>
+            <p>Metonic, Saros, lunar phase, and hand-cranked analog computation are treated as the strongest public-facing layer.</p>
+          </article>
+          <article class="confidence-card inferred-card">
+            <span class="confidence inferred">inferred</span>
+            <h3>Reconstruction layer</h3>
+            <p>Dial layout, missing components, and gear relationships are shown as model interpretations, not final certainty.</p>
+          </article>
+          <article class="confidence-card approximate-card">
+            <span class="confidence approximate">approx</span>
+            <h3>Browser math</h3>
+            <p>Sun/Moon positions and eclipse-window checks are simplified educational calculations, not precision astronomy.</p>
+          </article>
+          <article class="confidence-card future-card">
+            <span class="confidence future">future</span>
+            <h3>Speculative lane</h3>
+            <p>Planet pointers and alternate cosmos models belong behind explicit toggles and stronger source receipts.</p>
+          </article>
+        </div>
+
+        <div class="source-toolbar">
+          <h3>Reference cards</h3>
+          <p>These are starting receipts for the v0.2 educational boundary. Future versions can add page-level notes and model toggles.</p>
+        </div>
+        <div id="sourceCards" class="source-card-grid" aria-live="polite"></div>
+      </section>
+
       <section id="ledger" class="panel ledger-panel">
         <div class="section-heading">
           <p class="eyebrow">Simulation receipt</p>
@@ -223,10 +265,10 @@
           <article>
             <h3>Boundary notes</h3>
             <ul class="boundary-list">
-              <li><strong>Pass:</strong> cycle visualization, date-to-dial mapping, educational gear ratios.</li>
+              <li><strong>Pass:</strong> cycle visualization, date-to-dial mapping, educational gear ratios, and source/confidence labeling.</li>
               <li><strong>Bounded:</strong> exact tooth counts, full ancient layout, and missing component certainty.</li>
               <li><strong>Denied:</strong> precision astronomy claims, prophecy claims, or “complete reconstruction” claims.</li>
-              <li><strong>Next receipt:</strong> add source cards and per-reconstruction model toggles.</li>
+              <li><strong>Next receipt:</strong> add reconstruction toggles, source annotations, and exportable ledger snapshots.</li>
             </ul>
           </article>
         </div>
